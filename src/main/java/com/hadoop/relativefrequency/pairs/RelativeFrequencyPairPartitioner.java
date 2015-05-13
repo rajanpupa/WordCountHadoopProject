@@ -6,8 +6,8 @@ import org.apache.hadoop.mapreduce.Partitioner;
 public class RelativeFrequencyPairPartitioner extends Partitioner<WordPairKeyObject, DoubleWritable>{
 
 	@Override
-	public int getPartition(WordPairKeyObject arg0, DoubleWritable arg1, int arg2) {
-		return arg0.hashCode() % arg2;
+	public int getPartition(WordPairKeyObject key, DoubleWritable value, int numReducers) {
+		return key.hashCode() % numReducers;
 		//return 0;
 	}
 

@@ -36,7 +36,8 @@ public class RelativeFrequencyTool extends Configured implements Tool {
 		job.setJarByClass(RelativeFrequencyTool.class);
 
 		// Setup MapReduce
-		job.setMapperClass(RelativeFrequencyMapper.class);
+//		job.setMapperClass(RelativeFrequencyMapper.class);
+		job.setMapperClass(RelativeFrequencyInMapperCombiner.class);
 		job.setReducerClass(RelativeFrequencyReducer.class);
 		job.setNumReduceTasks(1);
 
