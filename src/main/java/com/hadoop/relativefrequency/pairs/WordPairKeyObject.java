@@ -4,7 +4,6 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -51,9 +50,9 @@ public class WordPairKeyObject implements WritableComparable<WordPairKeyObject>{
 	@Override
 	public int compareTo(WordPairKeyObject o) {
 		if(! this.word.equals(o.word)){
-			return this.word.compareTo(o.word);
+			return new Integer(Integer.parseInt(this.word.toString())).compareTo(Integer.parseInt(o.word.toString()));
 		}else{
-			return this.neighbor.compareTo(o.neighbor);
+			return this.neighbor.toString().compareTo(o.neighbor.toString());
 		}
 	}
 	

@@ -53,7 +53,7 @@ public class WordPairKeyObject implements WritableComparable<WordPairKeyObject>{
 		if(! this.word.equals(o.word)){
 			return new Integer(Integer.parseInt(this.word.toString())).compareTo(Integer.parseInt(o.word.toString()));
 		}else{
-			return new Integer(Integer.parseInt(this.neighbor.toString())).compareTo(Integer.parseInt(o.neighbor.toString()));
+			return this.neighbor.toString().compareTo(o.neighbor.toString());
 		}
 	}
 	
