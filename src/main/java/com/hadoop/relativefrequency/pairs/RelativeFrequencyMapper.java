@@ -2,14 +2,14 @@ package com.hadoop.relativefrequency.pairs;
 
 import java.io.IOException;
 
-import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.DoubleWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 
 public class RelativeFrequencyMapper extends
-		Mapper<Object, Text, WordPairKeyObject, IntWritable> {
+		Mapper<Object, Text, WordPairKeyObject, DoubleWritable> {
 
-	private final IntWritable ONE = new IntWritable(1);
+	private final DoubleWritable ONE = new DoubleWritable(1d);
 	WordPairKeyObject pair = new WordPairKeyObject();
 	String dummyWord = "*";
 	private String REGEX_WHITEWORDS = "([\\s])+";
