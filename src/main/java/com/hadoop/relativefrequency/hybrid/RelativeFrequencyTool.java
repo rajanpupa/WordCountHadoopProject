@@ -1,11 +1,10 @@
-package com.hadoop.relativefrequency.stripes;
+package com.hadoop.relativefrequency.hybrid;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.MapWritable;
-import org.apache.hadoop.io.Text;
+import org.apache.hadoop.io.DoubleWritable;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
@@ -33,18 +32,20 @@ public class RelativeFrequencyTool extends Configured implements Tool {
 		Configuration conf = this.getConf();
 
 		// Create job
-		Job job = new Job(conf, "RelativeFrequencyComputationStripes");
+		Job job = new Job(conf, "RelativeFrequencyComputation");
 		job.setJarByClass(RelativeFrequencyTool.class);
 
 		// Setup MapReduce
-		job.setMapperClass(RelativeFrequencyMapper.class);
+//		job.setMapperClass(RelativeFrequencyMapper.class);
+		job.setMapperClass(RelativeFrequencyInMapperCombiner.class);
 		job.setReducerClass(RelativeFrequencyReducer.class);
-		job.setPartitionerClass(RelativeFrequencyStripesPartitioner.class);
 		job.setNumReduceTasks(1);
 
 		// Specify key / value
-		job.setOutputKeyClass(Text.class);
-		job.setOutputValueClass(MapWritable.class);
+		job.setOutputKeyClass(WordPairKeyObject.class);
+		job.setOutputValueClass(DoubleWritable.class);
+		
+		job.setPartitionerClass(RelativeFrequencyPairPartitioner.class);
 
 		// Input
 		FileInputFormat.addInputPath(job, inputPath);

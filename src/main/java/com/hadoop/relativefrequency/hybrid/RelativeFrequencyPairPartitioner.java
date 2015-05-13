@@ -1,4 +1,4 @@
-package com.hadoop.relativefrequency.pairs;
+package com.hadoop.relativefrequency.hybrid;
 
 import org.apache.hadoop.io.DoubleWritable;
 import org.apache.hadoop.mapreduce.Partitioner;
