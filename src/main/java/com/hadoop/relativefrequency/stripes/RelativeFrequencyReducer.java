@@ -1,6 +1,8 @@
 package com.hadoop.relativefrequency.stripes;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.hadoop.io.DoubleWritable;
@@ -10,51 +12,45 @@ import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.mapreduce.Reducer;
 
 public class RelativeFrequencyReducer extends
-		Reducer<Text, MapWritable, Text, DoubleWritable> {
+		Reducer<Text, MapWritable, Text, Text> {
 	
 	DoubleWritable dw = new DoubleWritable();
 	
 	String word;
 	String neighbor;
 	
-	double totalCount = 0;
+	Double totalCount = 0d;
 	
-	MapWritable map = new MapWritable();
+	//MapWritable map = new MapWritable();
+	Map<String, Double> map = new HashMap<String, Double>();
 	
 	@Override
 	public void reduce(Text key, Iterable<MapWritable> values, Context context)
             throws IOException, InterruptedException {
 		
-		totalCount = 0;
-		 map = new MapWritable();
+		totalCount = 0d;
+		 //map = new MapWritable();
+		map = new HashMap<String, Double>();
 		for(MapWritable value : values){
 			for(Entry<Writable, Writable> entry : value.entrySet()){
-				if( map.containsKey( entry.getKey() ) ){
-					DoubleWritable count = (DoubleWritable) map.get(entry.getKey());
-					count.set( count.get() + Double.parseDouble(entry.getValue().toString()) );
+				if( map.containsKey( entry.getKey().toString() ) ){
+					Double count = (Double) map.get(entry.getKey().toString() );
+					count= count + Double.parseDouble(entry.getValue().toString()) ;
 				}else{
-					map.put(entry.getKey(), entry.getValue());
+					map.put(entry.getKey().toString(), ((DoubleWritable)entry.getValue()).get());
 				}
 				totalCount += Double.parseDouble(entry.getValue().toString());
 				
-				//context.write(new Text("["+key.toString()+","+entry.getKey().toString()+"]"), (DoubleWritable) entry.getValue());
 			}
 		}
 		
-		for(Entry<Writable, Writable> entry : map.entrySet()){
-			double occurence = Double.parseDouble(entry.getValue().toString());
-			context.write(new Text("["+key.toString()+","+entry.getKey().toString()+"]"), new DoubleWritable(occurence/totalCount));
+		
+		for(String k: map.keySet()){
+			map.put(k, map.get(k)/totalCount);
 		}
 		
-		//test
-//		for(MapWritable mw: values){
-//			context.write(key, new DoubleWritable(totalCount++) );
-////			for(Writable n: mw.keySet()){
-////				double occurence = Double.parseDouble(mw.get(n).toString());
-////				context.write(new Text("["+key.toString()+","+mw.get(n).toString()+"]"), new DoubleWritable(totalCount++));
-////			}
-//		}
-		//map.clear();
+		context.write(key, new Text(map.toString()) );
+		
     }
 	
 }

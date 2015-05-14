@@ -9,7 +9,7 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 
 public class RelativeFrequencyReducer extends
-		Reducer<WordPairKeyObject, DoubleWritable, Text, DoubleWritable> {
+		Reducer<WordPairKeyObject, DoubleWritable, Text, Text> {
 	
 	DoubleWritable dw = new DoubleWritable();
 	
@@ -51,7 +51,7 @@ public class RelativeFrequencyReducer extends
 	
 	@Override
 	protected void cleanup(
-			Reducer<WordPairKeyObject, DoubleWritable, Text, DoubleWritable>.Context context)
+			Reducer<WordPairKeyObject, DoubleWritable, Text, Text>.Context context)
 			throws IOException, InterruptedException {
 		// TODO Auto-generated method stub
 		super.cleanup(context);
@@ -67,10 +67,13 @@ public class RelativeFrequencyReducer extends
 			totalCount+= map.get(str);
 		}
 		
-		for(String str: map.keySet()){
-			context.write(new Text("[" + word + ", " + str + "]"), new DoubleWritable(map.get(str)/totalCount));
+//		for(String str: map.keySet()){
+//			context.write(new Text("[" + word + ", " + str + "]"), new DoubleWritable(map.get(str)/totalCount));
+//		}
+		for(String k: map.keySet()){
+			map.put(k, map.get(k)/totalCount);
 		}
-		
+		context.write(new Text(word), new Text(map.toString() ));
 		map = new HashMap<String, Double>();
 	}
 	
@@ -87,18 +90,18 @@ public class RelativeFrequencyReducer extends
 		return sum>0?sum:200;
 	}
 	
-	public void emitCustom(WordPairKeyObject key, double value, Context context) 
-			throws IOException, InterruptedException{
-		//dw.set(value);
-		context.write(key.toText(), new DoubleWritable(value));
-	}
+//	public void emitCustom(WordPairKeyObject key, double value, Context context) 
+//			throws IOException, InterruptedException{
+//		//dw.set(value);
+//		context.write(key.toText(), new DoubleWritable(value));
+//	}
 
-	public void emitCustom(Text word, Text neighbor, double value, Context context) 
-			throws IOException, InterruptedException{
-		//dw.set(value);
-		context.write(new WordPairKeyObject(word, neighbor).toText()
-				, new DoubleWritable(value));
-	}
+//	public void emitCustom(Text word, Text neighbor, double value, Context context) 
+//			throws IOException, InterruptedException{
+//		//dw.set(value);
+//		context.write(new WordPairKeyObject(word, neighbor).toText()
+//				, new DoubleWritable(value));
+//	}
 	
 	public static void main(String[] args) {
 		WordPairKeyObject wp1=new WordPairKeyObject("123", "*");

@@ -39,8 +39,13 @@ public class RelativeFrequencyTool extends Configured implements Tool {
 //		job.setMapperClass(RelativeFrequencyMapper.class);
 		job.setMapperClass(RelativeFrequencyInMapperCombiner.class);
 		job.setReducerClass(RelativeFrequencyReducer.class);
-		job.setNumReduceTasks(1);
+		//job.setNumReduceTasks(2);
 
+		try{
+			job.setNumReduceTasks(Integer.parseInt(System.getProperty("mapred.reduce.tasks")));
+		}catch(Exception e){
+			
+		}
 		// Specify key / value
 		job.setOutputKeyClass(WordPairKeyObject.class);
 		job.setOutputValueClass(DoubleWritable.class);
