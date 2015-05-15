@@ -1,5 +1,15 @@
 # WordCountHadoopProject
-Word count map-reduce maven java project for Hadoop2.6.0 distributed computing
+Word count map-reduce maven java project for Hadoop2.6.0 distributed computing.
+
+This was initially just a word count code, but there are more things added to this project.
+
+It is added with files to calculate the relative frequency of terms occuring in an array of items.
+These are being solved by three different ways.
+* Pairs approach (simplest mapper and reducer)
+* Stripes approach 
+* Hybrid approach
+
+###There are three separate *.sh file above to run the different algorithms.
 
 # Setup
 You should have java 1.7 or above in your system, maven 3.3
